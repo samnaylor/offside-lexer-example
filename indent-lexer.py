@@ -65,51 +65,53 @@ def tokenise(code: str) -> list[Token]:
 
             if lvl > level:
                 tokens.append(Token(Kind.INDENT, None, lineno, colno))
-                levels.append(lvl)
-                level = lvl
+                levels.append(level := lvl)
 
             while lvl < level:
                 tokens.append(Token(Kind.DEDENT, None, lineno, colno))
                 levels.pop(-1)
 
-                if len(levels):
+                try:
                     level = levels[-1]
-                else:
+                except IndexError:
                     level = 0
 
                 if level < lvl:
                     raise IndentationError()
+
+            continue
+
+        if char in ascii_letters:
+            identifier = char
+            start = colno
+
+            while ((ptr := ptr + 1) < len(code)) and (code[ptr] in ascii_letters + "_"):
+                identifier += code[ptr]
+                colno += 1
+
+            tokens.append(Token(Kind.IDENTIFIER, identifier, lineno, start))
+
+        elif char in digits + ".":
+            number = char
+            start = colno
+
+            while ((ptr := ptr + 1) < len(code)) and (code[ptr] in digits + "."):
+                number += code[ptr]
+                colno += 1
+
+            tokens.append(Token(Kind.INT_LITERAL, number, lineno, start))
+
+        elif char in ":()":
+            tokens.append(Token(MISC[char], char, lineno, colno))
+            ptr += 1
+            colno += 1
+
+        elif char == " ":
+            ptr += 1
+            colno += 1
+
         else:
-            if char in ascii_letters:
-                identifier = char
-                start = colno
-
-                while (ptr := ptr + 1) < len(code) and code[ptr] in ascii_letters + "_":
-                    identifier += code[ptr]
-                    colno += 1
-
-                tokens.append(Token(Kind.IDENTIFIER, identifier, lineno, start))
-            elif char in digits + ".":
-                number = char
-                start = colno
-
-                while (ptr := ptr + 1) < len(code) and code[ptr] in digits + ".":
-                    number += code[ptr]
-                    colno += 1
-
-                tokens.append(Token(Kind.INT_LITERAL, number, lineno, start))
-
-            elif char in ":()":
-                tokens.append(Token(MISC[char], char, lineno, colno))
-                ptr += 1
-                colno += 1
-
-            elif char == " ":
-                ptr += 1
-                colno += 1
-
-            else:
-                raise ValueError(f"Unknown character: {char}")
+            raise ValueError(f"Unknown character: {char}")
 
     tokens.append(Token(Kind.EOF, None, lineno, colno))
 
