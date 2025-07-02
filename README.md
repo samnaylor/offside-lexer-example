@@ -9,25 +9,31 @@ else:
     print(0)
 ```
 
-Becomes
+Outputs
 
-```python
-Token(kind=<Kind.IDENTIFIER: 0>, value='if', lineno=1, colno=1)
-Token(kind=<Kind.INT_LITERAL: 1>, value='1', lineno=1, colno=3)
-Token(kind=<Kind.COLON: 32>, value=':', lineno=1, colno=3)
-Token(kind=<Kind.INDENT: 253>, value=None, lineno=2, colno=5)
-Token(kind=<Kind.IDENTIFIER: 0>, value='print', lineno=2, colno=5)
-Token(kind=<Kind.LPAR: 33>, value='(', lineno=2, colno=9)
-Token(kind=<Kind.INT_LITERAL: 1>, value='1', lineno=2, colno=10)
-Token(kind=<Kind.RPAR: 34>, value=')', lineno=2, colno=10)
-Token(kind=<Kind.DEDENT: 254>, value=None, lineno=3, colno=1)
-Token(kind=<Kind.IDENTIFIER: 0>, value='else', lineno=3, colno=1)
-Token(kind=<Kind.COLON: 32>, value=':', lineno=3, colno=4)
-Token(kind=<Kind.INDENT: 253>, value=None, lineno=4, colno=5)
-Token(kind=<Kind.IDENTIFIER: 0>, value='print', lineno=4, colno=5)
-Token(kind=<Kind.LPAR: 33>, value='(', lineno=4, colno=9)
-Token(kind=<Kind.INT_LITERAL: 1>, value='0', lineno=4, colno=10)
-Token(kind=<Kind.RPAR: 34>, value=')', lineno=4, colno=10)
-Token(kind=<Kind.DEDENT: 254>, value=None, lineno=5, colno=1)
-Token(kind=<Kind.EOF: 255>, value=None, lineno=5, colno=1)
+```bash
+$ python tokenise.py
+
+01:01   KWD_IF          if
+01:04   INT_LITERAL     0
+01:05   COLON           :
+01:06   NEWLINE         \n
+02:01   _INDENT
+02:05   IDENTIFIER      print
+02:10   LPAR            (
+02:11   INT_LITERAL     1
+02:12   RPAR            )
+02:13   NEWLINE         \n
+03:01   _DEDENT
+03:01   KWD_ELSE        else
+03:05   COLON           :
+03:06   NEWLINE         \n
+04:01   _INDENT
+04:05   IDENTIFIER      print
+04:10   LPAR            (
+04:11   INT_LITERAL     0
+04:12   RPAR            )
+04:13   NEWLINE         \n
+05:01   _DEDENT
+05:01   EOF
 ```
